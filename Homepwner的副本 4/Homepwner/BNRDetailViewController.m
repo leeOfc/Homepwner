@@ -9,7 +9,7 @@
 #import "BNRDetailViewController.h"
 #import "BNRItem.h"
 
-@interface BNRDetailViewController ()
+@interface BNRDetailViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *nameField;
 @property (weak, nonatomic) IBOutlet UITextField *serialNumberField;
@@ -21,6 +21,7 @@
 @end
 
 @implementation BNRDetailViewController
+
 - (IBAction)takePicture:(id)sender {
     UIImagePickerController *imagePicker =
     [[UIImagePickerController alloc] init];
@@ -31,6 +32,21 @@
     } else {
         imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     }
+    imagePicker.delegate = self;
+    //以模态的形式显示UIImagePickerController对象
+    [self presentViewController:imagePicker
+                       animated:YES
+                     completion:nil];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+    //通过info字典获取选择的照片
+    UIImage *image = info[UIImagePickerControllerOriginalImage];
+    //将照片放入UIImageView对象
+    self.imageView.image = image;
+    //关闭UIImagePickerController对象
+    [self dismissViewControllerAnimated:YES
+                             completion:nil];
 }
 
 -(void) setItem:(BNRItem *)item
