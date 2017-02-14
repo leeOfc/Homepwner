@@ -7,9 +7,11 @@
 //
 
 #import "BNRDetailViewController.h"
+#import "BNRImageStore.h"
 #import "BNRItem.h"
 
-@interface BNRDetailViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface BNRDetailViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate,
+                        UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *nameField;
 @property (weak, nonatomic) IBOutlet UITextField *serialNumberField;
@@ -22,6 +24,11 @@
 
 @implementation BNRDetailViewController
 
+- (IBAction)backgroundTapped:(id)sender {
+    [self.view endEditing:YES];
+}
+
+#pragma mark - takepicture
 - (IBAction)takePicture:(id)sender {
     UIImagePickerController *imagePicker =
     [[UIImagePickerController alloc] init];
@@ -42,6 +49,8 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     //通过info字典获取选择的照片
     UIImage *image = info[UIImagePickerControllerOriginalImage];
+    //以itemKey为键，将照屁啊存入BNRImageStore对象
+    [[BNRImageStore sharedStore] setImage:image forKey:self.item.itemKey];
     //将照片放入UIImageView对象
     self.imageView.image = image;
     //关闭UIImagePickerController对象
@@ -54,6 +63,8 @@
     _item = item;
     self.navigationItem.title = _item.itemName;
    }
+
+#pragma mark - view life control
 
 - (void) viewWillAppear:(BOOL)animated
 {
@@ -72,6 +83,11 @@
     }
     //将转换后得到的日期字符串设置为dateLabel的标题
     self.dateLabel.text = [dateFormatter stringFromDate:item.dateCreated];
+    NSString *itemKey = self.item.itemKey;
+    //根据itemKey，从BNRImageStore对象获取照片
+    UIImage *imageToDisplay = [[BNRImageStore sharedStore] imageforKey:itemKey];
+    //将得到的照片赋给UIImageView对象
+    self.imageView.image = imageToDisplay;
 }
 
 -(void) viewWillDisappear:(BOOL)animated
@@ -86,6 +102,11 @@
     item.serialNumber = self.serialNumberField.text;
     item.valueInDollars = [self.valueField.text intValue];
     
+}
+
+- (BOOL) textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
 }
 
 @end

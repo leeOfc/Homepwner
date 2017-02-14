@@ -7,6 +7,7 @@
 //
 
 #import "BNRItemStore.h"
+#import "BNRImageStore.h"
 #import "BNRItem.h"
 
 @interface BNRItemStore()
@@ -55,7 +56,8 @@
     return item;
 }
 
--(NSArray *)allItems //编译器不会给他生成取方法和实例方法的， readonly！！
+-
+(NSArray *)allItems //编译器不会给他生成取方法和实例方法的， readonly！！
 {
     return self.privateItems;
 }
@@ -76,6 +78,8 @@
 
 -(void)removeItem:(BNRItem *)item
 {
+    NSString *key = item.itemKey;
+    [[BNRImageStore sharedStore] deleteImageForKey:key];
     [self.privateItems removeObjectIdenticalTo:item];
 }
 

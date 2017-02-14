@@ -8,11 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+@class UIImage;
+
 @interface BNRImageStore : NSObject
 
 + (instancetype) sharedStore;
 - (void) setImage: (UIImage *) image forKey: (NSString *) key;
-- (UIImage *) imageforKey: (NSStirng *) key;
+- (UIImage *) imageforKey: (NSString *) key;
 - (void) deleteImageForKey: (NSString *)key;
 
 @end
