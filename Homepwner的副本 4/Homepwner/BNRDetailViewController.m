@@ -40,6 +40,7 @@
         imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     }
     imagePicker.delegate = self;
+    imagePicker.allowsEditing = YES;
     //以模态的形式显示UIImagePickerController对象
     [self presentViewController:imagePicker
                        animated:YES
