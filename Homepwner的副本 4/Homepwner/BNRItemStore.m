@@ -22,9 +22,10 @@
 {
     static BNRItemStore *sharedStore = nil;
     //判断是否需要创建一个sharedStore对象
-    if (!sharedStore) {
-        sharedStore = [[self alloc]initPrivate];
-    }
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedStore = [[self alloc] initPrivate];
+    });
     
     return sharedStore;
 }
