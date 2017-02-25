@@ -92,7 +92,7 @@
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
-            <point key="canvasLocation" x="22" y="-363"/>
+            <point key="canvasLocation" x="-273" y="-559"/>
         </view>
     </objects>
 </document>
