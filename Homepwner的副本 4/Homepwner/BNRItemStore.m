@@ -7,6 +7,7 @@
 //
 
 #import "BNRItemStore.h"
+#import "BNRImageStore.h"
 #import "BNRItem.h"
 
 @interface BNRItemStore()
@@ -21,9 +22,10 @@
 {
     static BNRItemStore *sharedStore = nil;
     //判断是否需要创建一个sharedStore对象
-    if (!sharedStore) {
-        sharedStore = [[self alloc]initPrivate];
-    }
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedStore = [[self alloc] initPrivate];
+    });
     
     return sharedStore;
 }
@@ -55,7 +57,8 @@
     return item;
 }
 
--(NSArray *)allItems //编译器不会给他生成取方法和实例方法的， readonly！！
+-
+(NSArray *)allItems //编译器不会给他生成取方法和实例方法的， readonly！！
 {
     return self.privateItems;
 }
@@ -76,6 +79,8 @@
 
 -(void)removeItem:(BNRItem *)item
 {
+    NSString *key = item.itemKey;
+    [[BNRImageStore sharedStore] deleteImageForKey:key];
     [self.privateItems removeObjectIdenticalTo:item];
 }
 

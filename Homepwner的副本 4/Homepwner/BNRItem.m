@@ -63,6 +63,10 @@
         _valueInDollars = value;
         // Set _dateCreated to the current date and time
         _dateCreated = [[NSDate alloc] init];
+        //创建一个NSUUID对象，然后获取其NSString类型的值
+        NSUUID *uuid = [[NSUUID alloc] init];
+        NSString *key = [uuid UUIDString];
+        _itemKey = key;
     }
 
     // Return the address of the newly initialized object
@@ -125,6 +129,15 @@
          self.valueInDollars,
          self.dateCreated];
     return descriptionString;
+}
+
+- (void) encodeWithCoder: (NSCoder *) aCoder
+{
+    [aCoder encodeObject: self.itemName forKey:@"itemName"];
+    [aCoder encodeObject: self.serialNumber forKey:@"serialNumber"];
+    [aCoder encodeObject: self.dateCreated forKey:@"dateCreated"];
+    [aCoder encodeObject: self.itemKey forKey:@"itemKey"];
+    [aCoder encodeInt: self.valueInDollars forKey:@"valueInDollars"];
 }
 
 @end

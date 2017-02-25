@@ -79,14 +79,27 @@
     //创建NSIndexPath对象，代表的位置是：第一个表格段，最后一个表格行
     //NSInteger lastRow = [self.tableView numberOfRowsInSection:0];
     //新建BNRItem对象并将其加入BNRItemStore对象
-    BNRItem *newItem = [[BNRItemStore sharedStore] createItem];
-    //获取新创建的对象在allItems数组中的索引
-    NSInteger lastRow = [[[BNRItemStore sharedStore] allItems] indexOfObject:newItem];
     
-    NSIndexPath *indexpath = [NSIndexPath indexPathForRow:lastRow inSection:0];
+    BNRItem *newItem = [[BNRItemStore sharedStore] createItem];
+    
+    //获取新创建的对象在allItems数组中的索引
+    //NSInteger lastRow = [[[BNRItemStore sharedStore] allItems] indexOfObject:newItem];
+    
+    //NSIndexPath *indexpath = [NSIndexPath indexPathForRow:lastRow inSection:0];
     //将新行插入UITableView对象
-    [self.tableView insertRowsAtIndexPaths:@[indexpath]
-                          withRowAnimation:UITableViewRowAnimationTop];
+    //[self.tableView insertRowsAtIndexPaths:@[indexpath]
+    //                     withRowAnimation:UITableViewRowAnimationTop];
+    BNRDetailViewController *detailViewController = [[BNRDetailViewController alloc]
+                                                     initForNewItem:YES];
+    detailViewController.item = newItem;
+    detailViewController.dismissBlock = ^{
+    
+        [self.tableView reloadData];
+    };
+    UINavigationController *navController = [[UINavigationController alloc]
+                                             initWithRootViewController:detailViewController];
+    navController.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self presentViewController:navController animated:YES completion:nil];
 }
 
 
@@ -193,8 +206,9 @@
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    BNRDetailViewController *detailViewController = [[BNRDetailViewController alloc] init];
     
+    BNRDetailViewController *detailViewController = [[BNRDetailViewController alloc]
+                                                     initForNewItem:NO];
     NSArray *items = [[BNRItemStore sharedStore] allItems];
     BNRItem *selectionItem = items[indexPath.row];
     //将选中的BNRItem对象赋给DetailViewController对象
